@@ -1,80 +1,161 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang = "en">
 <head>
-    <meta charset="utf-8">
-    <title>Hello! Wow!</title>
-    <script src="js/phaser.js"></script>
-    <script src="js/main.js"></script>
-
-<style>
-body
+    <meta charset="UTF-8">
+    <title>The Easiest Puzzle</title>
+    <script type= "text/javascript" src="assets/phaser.min.js"></script>
+<style type="text/css">
 {
     color: #777;
     font-family: "Avenir", Verdana, sans-serif;
 }
 #readme
 {
+    margin: 0;
     margin-top: 10px;
 }
 </style>
-
 </head>
 <body>
-<div id="game"></div>
+    
+<div id="game">
+<script type = "text/javascript">
+var game = new Phaser.Game(360, 720, Phaser.AUTO,'', {preload: preload, create: create, update: update}); //add update later
+
+function preload() {
+    game.load.image("ShadySite", "assets/ShadySiteLim.png");
+    game.load.spritesheet("walkingman", "assets/minianim.png", 64, 197);
+    game.load.audio("chill","assets/S.mp3");
+    
+}
+var platforms;
+var player;
+var cursors;
+var sound;
+    
+function create() {
+    //Allows for a backdrop
+    game.add.sprite(0, 0, "ShadySite");
+    sound = game.add.audio("chill");
+    sound.play();
+    //groups any platforms together; also
+    //makes the game not black out (find out reason
+    //why it's doing that later)
+    platforms = game.add.group();
+    platforms.enableBody = true;
+    //Starts the system and ensures that the game is working
+    //in regards to the physics engine that we have currently
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    var ground = platforms.create(0, game.world.height - 64, 'ground');
+    //Sets ground to scale with the rest of the sytem
+    ground.scale.setTo(2,2);
+    ground.body.immovable = true;
+    player = this.game.add.sprite(32, game.world.height-260,'walkingman');
+    player.frame = 3;
+    game.physics.arcade.enable(player);
+    
+    //Allows for the animation of the character to occur
+    player.animation.add('right',[9, 10, 11, 12, 13, 14, 15, 16], 9, true);
+    player.animation.add('left', [1, 2, 3, 4, 5, 6, 7, 8], 9, true);
+    
+    //sound = game.add.audio("chill",1,true,true);
+    //sound.play();
+}
+function update() {
+    //Allows our player to be affected by the physics of the game
+    game.physics.arcade.collide(player,platforms);
+    
+    cursors = game.input.keyboard.createCursorKeys();
+    
+    player.body.velocity.x = 0;
+    
+    if (cursors.left.isDown) {
+        player.body.velocity.x = -150;
+        player.animations.play('left');
+    }
+    else if (cursors.right.isDown) {
+        player.body.velocity.x = 150;
+        player.animations.play('right');
+    }
+    else {
+        player.animations.stop();
+        player.frame = 0;
+    }
+    
+}
+</script>    
+</div>
+
 <div id="readme">
-<h2>Your game title</h2>
+<h2>How do you escape?
+    A General Readme to the World's Shortest Walking Sim.</h2>
 <ul>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game.
+This is a game revolving around narrative, story structure, and exploration, much in the same way the games like the Stanley Parable tackle meta game narratives.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-What experience do you want players to have when playing your game?
+There is no real player goals that are present within this game; the most that this game has to offer is the prospect of exploration, and understanding the narrative via outside work in order to solve future problems. If there is a main player goal, however, it would be important to note that it lies in the Title.
 </li>
 
 <li><strong>Genre:</strong>
-A single sentence that places the game within a game genre or a hybrid of genres.
+It's sort of a casual, WASD-and-search/explore experience with slight narrative elements.
 </li>
 
 <li><strong>Game play:</strong>
-A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
+No real gameplay, save for some (yet to be implemented) puzzles that will test your knowledge and know how on logic once the puzzles are developed. While the only real puzzle (and probably the easiest) is how do you escape the box, but puzzles aside it's going to be very akin to narrative-styled games before it. Much of the game, if it's going to be developed further, should be focused more on real life player experience and colliding that with the game. However, for now, it's essentially a very short walking simulator where you explore to a small degree.
 </li>
 
 <li><strong>Prototype goal:</strong>
-What game mechanic is this prototype evaluating?
+The central game mechanic is to establish exploration on small scale for the project, before the game gets bigger in terms of puzzles and world building. From here, it's going to be very relient in having the player "think outside the box", and identify the problems that are there via real life calculations.
 </li>
 
 <li><strong>Features:</strong>
-What are the unique aspects of your game that set it apart?
+The one thing that drives the game foward is the method for which the player is supposed to solve the problems. Many of this include breaking down the game to it's base code, to analyze what makes it tick. Furthermore, it's made specifically to be a game that you play in and outside of, regardless as to whether or not you have real work that you need to do.
 </li>
 
 <li><strong>Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, put it here. If the game is abstract, then say so.
+    
+The main world hub is presented in a dark, lonely city in which the protagonist is trapped in. He has no idea as to how he got there, and he has no real idea as to get out. He knows that, while the world isn't quite complete, that there is a lot of passion put into where he's at, and that, through logic and determination, he can exit out of where he is. The setting is merely a plot device in order to drive the player forward, but not just within the literary context. It's also embedded into the game, and forces the player to think heavily as to what they can do in their own life to help this character.
 </li>
 
 <li><strong>Story:</strong>
-If the game has a story, summarize it in a paragraph. How will the dramatic tension interact with the gameplay tension?
+You are Tag; the protagonist of this story and the main character as well. Claustrophobic, aloof, and scared, he finds himself trapped in a situation that he can't get out of when he's encountered with the fact that he cannot proceed to the next room and get back on with his life. However, given that the next room not only leads to nothing, but also leads to the unknown, he must use his inner knowledge to find a way to crack the game itself to escape.
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+I want to reach young, college age students who are looking to sound smart, but don't yet realize the pretentiousness of this game.
 </li>
 
 <li><strong>Play time:</strong>
-How long does your game take to play?
+The game should take about twenty minutes for those who aren't computer science majors, and five minutes for those who are. However, since puzzles haven't been implemented yet, the game based solely on exploration could be a good few seconds or so.
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+There aren't a lot of strategies yet, considering the lack of puzzles, so there are no real strategies yet for beating the game, but once I get enough experience with Phaser and it's animation process, I should be good.
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+The majority of the assets that I made were made from scratch with the small amount of time I had, but I did use some of the documentation on phaser.io to help me out with the programming, as well as some of the code from the "part9" project from Phaser so as to get a basic understanding as to how to better make my game. I also used Freddie Joachim's "Sauced" from his album "Tiger" for the music you're hearing as you play this game.
+    
+Programming Source:
+    
+    http://phaser.io/tutorials/making-your-first-phaser-game/part3
+    
+    http://phaser.io/examples/v2/sprites/scale-a-sprite
+    
+    http://www.joshmorony.com/how-to-create-an-animated-character-using-sprites-in-phaser/
+    
+    http://phaser.io/docs/2.3.0/Phaser.SoundManager.html#setDecodedCallback
+    
+    http://phaser.io/examples/v2/audio/play-music
+Music Source:
+    http://music.freddiejoachim.com/album/tiger-free-download
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Which other game most closely resembles your game? If you are borrowing from a Phaser Example, you must say so here.
+Some games that come to mind are point-and-click adventure games, or better yet walking simulators like Dear Ester.
 </li>
 
 </ul>

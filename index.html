@@ -2,8 +2,8 @@
 <html lang = "en">
 <head>
     <meta charset="UTF-8">
-    <title>The Easiest Puzzle</title>
-    <script type= "text/javascript" src="assets/phaser.min.js"></script>
+    <title>Satan's Dice Roller</title>
+    <script type= "text/javascript" src="phaser.min.js"></script>
 <style type="text/css">
 {
     color: #777;
@@ -20,142 +20,190 @@
     
 <div id="game">
 <script type = "text/javascript">
-var game = new Phaser.Game(360, 720, Phaser.AUTO,'', {preload: preload, create: create, update: update}); //add update later
+var game = new Phaser.Game(500, 1000, Phaser.CANVAS,'', {preload: preload, create: create, update: update}); //add update later
 
+var text;
+var sound;
+var counter = 0;
+var randomVal = game.rnd.integerInRange(1,6);
+var playerVal;
+var Spoopy;
+var quitGame = false;
+    
 function preload() {
-    game.load.image("ShadySite", "assets/ShadySiteLim.png");
-    game.load.spritesheet("walkingman", "assets/minianim.png", 64, 197);
-    game.load.audio("chill","assets/S.mp3");
+    game.load.image("spoopydan", "SpoopyDan.png");
+    game.load.image("spoopydanBish", "SpoopyDanBishPlz.png");
+    game.load.image("spoopydanuwot", "SpoopyDanDistraught.png");
+    game.load.image("spoopydanplz","SpoopyDanDontKillMe.png");
+    game.load.image("spoopydanuded","SpoopyDanFckU.png");
+    game.load.image("hashtagded","SpoopyDanHashtagDead.png");
+    game.load.image("ohgodno", "SpoopyDanOhGodNo.png");
+    game.load.audio("Creepy","CreepyBoss.ogg");
     
 }
-var platforms;
-var player;
-var cursors;
-var sound;
-    
 function create() {
-    //Allows for a backdrop
-    game.add.sprite(0, 0, "ShadySite");
-    sound = game.add.audio("chill");
+    Spoopy = game.add.sprite(50, 400, "spoopydan");
+    /*
+    game.add.sprite(50, 400, "spoopydanBish");
+    game.add.sprite(50, 400, "spoopydanuwot");
+    game.add.sprite(50, 400, "spoopydanplz");
+    game.add.sprite(50, 400, "spoopydanuded");
+    game.add.sprite(50, 400, "hashtagded");
+    game.add.sprite(50, 400, "ohgodno");
+    */
+    sound = game.add.audio("Creepy");
     sound.play();
-    //groups any platforms together; also
-    //makes the game not black out (find out reason
-    //why it's doing that later)
-    platforms = game.add.group();
-    platforms.enableBody = true;
-    //Starts the system and ensures that the game is working
-    //in regards to the physics engine that we have currently
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
-    //Sets ground to scale with the rest of the sytem
-    ground.scale.setTo(2,2);
-    ground.body.immovable = true;
-    player = this.game.add.sprite(32, game.world.height-260,'walkingman');
-    player.frame = 3;
-    game.physics.arcade.enable(player);
-    
-    //Allows for the animation of the character to occur
-    player.animation.add('right',[9, 10, 11, 12, 13, 14, 15, 16], 9, true);
-    player.animation.add('left', [1, 2, 3, 4, 5, 6, 7, 8], 9, true);
-    
-    //sound = game.add.audio("chill",1,true,true);
-    //sound.play();
+    var style = { font: "italic 25px Arial", fill: "#fff", align: "center" }
+    text = game.add.text(10,10,"Hey, welcome to a game of Roulette\nSix Rounds total for you\nClick To Roll", style);
+    text.anchor.setTo(-0.10,-0.5);
 }
 function update() {
-    //Allows our player to be affected by the physics of the game
-    game.physics.arcade.collide(player,platforms);
-    
-    cursors = game.input.keyboard.createCursorKeys();
-    
-    player.body.velocity.x = 0;
-    
-    if (cursors.left.isDown) {
-        player.body.velocity.x = -150;
-        player.animations.play('left');
+    game.input.onDown.add(down, this);
+}
+function down() {
+    counter++;
+    if (quitGame == true) {
+        game.destroy();
     }
-    else if (cursors.right.isDown) {
-        player.body.velocity.x = 150;
-        player.animations.play('right');
+    else if (counter == 1) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("spoopydanBish");
+            text.setText("Lucky Start;\n Let's see how long you last here, then\n");
+        }
+        else {
+            Spoopy.loadTexture("spoopydanuded");
+            text.setText("You lose!\n Hail Satan, haha!");
+            quitGame = true;
+        }
     }
-    else {
-        player.animations.stop();
-        player.frame = 0;
+    else if (counter == 2) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("spoopydan");
+            text.setText("Hope you don't win next round,\n otherwise Satan legit will kill me\n");
+        }
+        else {
+            Spoopy.loadTexture("spoopydanuded");
+            text.setText("You lose! Hail Satan, haha!");
+            quitGame = true;
+        }
     }
-    
+    else if (counter == 3) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("spoopydanuwot");
+            text.setText("Um... could you stop living, please?\n I'm worried\n");
+        }
+        else {
+            Spoopy.loadTexture("spoopydanuded");
+            text.setText("You lose!\n Hail Satan, haha!");
+            quitGame = true;
+        }
+    }
+    else if (counter == 4) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("spoopydanplz");
+            text.setText("Erm, you can stop whenever,\n you know!");
+            quitGame = true;
+        }
+        else {
+            Spoopy.loadTexture("spoopydanuded");
+            text.setText("Whew!\n Thank Satan!");
+            quitGame = true;
+        }
+    }
+    else if (counter == 5) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("ohgodno");
+            text.setText("OK! Please, stop, I don't want to die!\n");
+        }
+        else {
+            Spoopy.loadTexture("spoopydanplz");
+            text.setText("Wow! That was close!\n Hail Satan!");
+            quitGame = true;
+        }
+    }
+    else if (counter >= 6) {
+        playerVal = game.rnd.integerInRange(1,6);
+        if (playerVal != randomVal) {
+            Spoopy.loadTexture("hashtagded");
+            text.setText("\tYou win!\n");
+        }
+        else {
+            Spoopy.loadTexture("spoopydanplz");
+            text.setText("Oh god, I'm converting to Catholicism!");
+            quitGame = true;
+        }
+    }
 }
 </script>    
 </div>
 
 <div id="readme">
-<h2>How do you escape?
-    A General Readme to the World's Shortest Walking Sim.</h2>
+<h2>Satan's Dice Roller</h2>
 <ul>
 
 <li><strong>High Concept:</strong>
-This is a game revolving around narrative, story structure, and exploration, much in the same way the games like the Stanley Parable tackle meta game narratives.
+Beat Satan's cultist in a brutal deal to the death.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-There is no real player goals that are present within this game; the most that this game has to offer is the prospect of exploration, and understanding the narrative via outside work in order to solve future problems. If there is a main player goal, however, it would be important to note that it lies in the Title.
+Essentially, it's a game of Russian Roulette. Your job, as the player, is to get through all the rounds. If you lose, you'll suffer a brain meltdown and die. However, if you're opponent loses, they die and you win. Pretty simple, but if anything I'm planning on adding a few more additions to the game if I have the time and chance to. Be sure to stay tuned for more!
 </li>
 
 <li><strong>Genre:</strong>
-It's sort of a casual, WASD-and-search/explore experience with slight narrative elements.
+It's sort of a casual, luck-based horror-esque experience with slight narrative elements.
 </li>
 
 <li><strong>Game play:</strong>
-No real gameplay, save for some (yet to be implemented) puzzles that will test your knowledge and know how on logic once the puzzles are developed. While the only real puzzle (and probably the easiest) is how do you escape the box, but puzzles aside it's going to be very akin to narrative-styled games before it. Much of the game, if it's going to be developed further, should be focused more on real life player experience and colliding that with the game. However, for now, it's essentially a very short walking simulator where you explore to a small degree.
+Among some of the actions that the player can perform, they can choose to pass, hit or skip turn. If they skip their turn, then that means that they'll have to go and play Russian roulette and will have an increased chance of dying, but if they survive, than that means that their opponent will have to do it twice.
 </li>
 
 <li><strong>Prototype goal:</strong>
-The central game mechanic is to establish exploration on small scale for the project, before the game gets bigger in terms of puzzles and world building. From here, it's going to be very relient in having the player "think outside the box", and identify the problems that are there via real life calculations.
+The central game mechanic is really luck and strategizing to get the best possible outcome that could come out of this.
 </li>
 
 <li><strong>Features:</strong>
-The one thing that drives the game foward is the method for which the player is supposed to solve the problems. Many of this include breaking down the game to it's base code, to analyze what makes it tick. Furthermore, it's made specifically to be a game that you play in and outside of, regardless as to whether or not you have real work that you need to do.
+Mostly the time limit, because it allows a sort of struggle between the want to strategize and plan for what the next move will be, versus the amount of time that they have to make that decision.
 </li>
 
 <li><strong>Setting/Premise:</strong>
     
-The main world hub is presented in a dark, lonely city in which the protagonist is trapped in. He has no idea as to how he got there, and he has no real idea as to get out. He knows that, while the world isn't quite complete, that there is a lot of passion put into where he's at, and that, through logic and determination, he can exit out of where he is. The setting is merely a plot device in order to drive the player forward, but not just within the literary context. It's also embedded into the game, and forces the player to think heavily as to what they can do in their own life to help this character.
+The main world hub is presented in a dark, mysterious room, possibly away from civilization. It's your typical horror movie atmosphere, but for the majority the player, and in turn the opponent that he's talking to, should not know why they're there or what they are doing over there. The main point though is that, regardless, the opponent very much wants to kill the player, and is willing to go to any lengths in order to do so. If it wasn't for the fact that the devil loves Russian Roulette, though, you probably wouldn't even be here.
 </li>
 
 <li><strong>Story:</strong>
-You are Tag; the protagonist of this story and the main character as well. Claustrophobic, aloof, and scared, he finds himself trapped in a situation that he can't get out of when he's encountered with the fact that he cannot proceed to the next room and get back on with his life. However, given that the next room not only leads to nothing, but also leads to the unknown, he must use his inner knowledge to find a way to crack the game itself to escape.
+The tension of the story collides with the gameplay as it comes from slowly figuring out that the cultist, in a lot of ways, is very much like the player character, in the sense that he very much wants to get out of that situation as best as he can as well. The only difficulty is that the opponent is partially controlled by Satan himself, which can make it difficult considering that you want him to get out. As for you, you don't quite know yourself why you're there either.
 </li>
 
 <li><strong>Target Audience:</strong>
-I want to reach young, college age students who are looking to sound smart, but don't yet realize the pretentiousness of this game.
+I want to reach primarily young, edgy teenagers who are going through the Linkin Park and My Chemical Romance part of their life.
 </li>
 
 <li><strong>Play time:</strong>
-The game should take about twenty minutes for those who aren't computer science majors, and five minutes for those who are. However, since puzzles haven't been implemented yet, the game based solely on exploration could be a good few seconds or so.
+My game should take about a few minutes currently, but it's dependent on how long the narrative will be in the future.
 </li>
 
 <li><strong>Strategies:</strong>
-There aren't a lot of strategies yet, considering the lack of puzzles, so there are no real strategies yet for beating the game, but once I get enough experience with Phaser and it's animation process, I should be good.
+Just try to survive as long as possible, and if you fail the first time, well, you're kind of dead. You won't be able to retry again until you refresh the browser.
 </li>
 
 <li><strong>Prototype Assets:</strong>
-The majority of the assets that I made were made from scratch with the small amount of time I had, but I did use some of the documentation on phaser.io to help me out with the programming, as well as some of the code from the "part9" project from Phaser so as to get a basic understanding as to how to better make my game. I also used Freddie Joachim's "Sauced" from his album "Tiger" for the music you're hearing as you play this game.
+The majority of the assets that I made were made from scratch with the small amount of time I had, but I did use some of the code from the "part9" project so as to get a basic understanding as to how to better make my game.
     
-Programming Source:
-    
-    http://phaser.io/tutorials/making-your-first-phaser-game/part3
-    
-    http://phaser.io/examples/v2/sprites/scale-a-sprite
-    
-    http://www.joshmorony.com/how-to-create-an-animated-character-using-sprites-in-phaser/
-    
-    http://phaser.io/docs/2.3.0/Phaser.SoundManager.html#setDecodedCallback
-    
-    http://phaser.io/examples/v2/audio/play-music
-Music Source:
-    http://music.freddiejoachim.com/album/tiger-free-download
+Sources: http://phaser.io/tutorials/making-your-first-phaser-game/part3; http://www.html5gamedevs.com/topic/4640-integer-random-question/; http://phaser.io/docs/2.4.4/Phaser.Text.html; http://phaser.io/examples/v2/input/mouse-buttons; http://phaser.io/examples/v2/text/text-events; http://phaser.io/examples/v2/text/remove-text;
+http://phaser.io/docs/2.3.0/Phaser.Component.LoadTexture.html;
+http://www.html5gamedevs.com/topic/1972-stop-update/;
+http://www.html5gamedevs.com/topic/4640-integer-random-question/;
+http://examples.phaser.io/_site/view_full.html?d=text&f=update+text.js&t=update%20text;
+http://phaser.io/examples/v2/text/center-text
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Some games that come to mind are point-and-click adventure games, or better yet walking simulators like Dear Ester.
+Possibly the only game that I could possibly think of that's closest to this one is War, in which you're never quite sure who's going to turn up to be the victor.
 </li>
 
 </ul>
